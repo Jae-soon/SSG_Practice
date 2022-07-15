@@ -1,39 +1,38 @@
 package com.ll.exam;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class WiseSayingController {
-    private List<WiseSaying> wiseSayings;
-    private int lastIndex;
     private Scanner sc;
+    private WiseSayingService wiseSayingService;
 
     public WiseSayingController(Scanner sc) {
         this.sc = sc;
-        wiseSayings = new ArrayList<>();
-        lastIndex = 0;
+        wiseSayingService = new WiseSayingService();
     }
 
     public void write(Request rq) {
-        int id = ++lastIndex;
         System.out.print("wiseSaying : ");
         String content = sc.nextLine().trim();
         System.out.print("author : ");
         String author = sc.nextLine().trim();
 
-        WiseSaying newWiseSaying = new WiseSaying(id, content, author);
-        wiseSayings.add(newWiseSaying);
+        WiseSaying wiseSaying = wiseSayingService.write(content, author);
 
-        System.out.printf("Add Your WiseSaying(ID = %d)\n", newWiseSaying.id);
+        System.out.printf("Add Your WiseSaying(ID = %d)\n", wiseSaying.id);
     }
 
     public void list(Request rq) {
         System.out.println("List");
         System.out.println("id / WiseSaying / author");
         System.out.println("==============================");
+
+        List<WiseSaying> wiseSayings = wiseSayingService.findAll();
+
         for (int i = wiseSayings.size() - 1; i >= 0; i--) {
             WiseSaying listwiseSaying = wiseSayings.get(i);
+
             System.out.printf("%d / %s / %s\n", listwiseSaying.id, listwiseSaying.content, listwiseSaying.author);
         }
     }
@@ -46,20 +45,14 @@ public class WiseSayingController {
             return;
         }
 
-        WiseSaying foundWiseSaying = null;
-
-        for (WiseSaying wiseSaying : wiseSayings) {
-            if(wiseSaying.id == paramId) {
-                foundWiseSaying = wiseSaying;
-            }
-        }
+        WiseSaying foundWiseSaying = wiseSayingService.findById(paramId);
 
         if(foundWiseSaying == null) {
             System.out.printf("Cannot Found %d WiseSaying!\n", paramId);
             return;
         }
 
-        wiseSayings.remove(foundWiseSaying);
+        wiseSayingService.remove(paramId);
         System.out.println("Successfully Delete!");
     }
 
@@ -71,13 +64,7 @@ public class WiseSayingController {
             return;
         }
 
-        WiseSaying foundWiseSaying = null;
-
-        for (WiseSaying wiseSaying : wiseSayings) {
-            if(wiseSaying.id == paramId) {
-                foundWiseSaying = wiseSaying;
-            }
-        }
+        WiseSaying foundWiseSaying = wiseSayingService.findById(paramId);
 
         if(foundWiseSaying == null) {
             System.out.printf("Cannot Found %d WiseSaying!\n", paramId);
@@ -92,8 +79,7 @@ public class WiseSayingController {
         System.out.print("Write New author : ");
         String author = sc.nextLine().trim();
 
-        foundWiseSaying.content = content;
-        foundWiseSaying.author = author;
+        wiseSayingService.modify(paramId, content, author);
 
         System.out.println("Successfully edit Your WiseSaying!");
     }
