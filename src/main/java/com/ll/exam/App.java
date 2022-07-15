@@ -28,14 +28,21 @@ public class App {
             switch(rq.getPath()) {
                 case "exit":
                     break outer;
+
                 case "write":
                     write(rq);
                     break;
+
                 case "list":
                     list(rq);
                     break;
+
                 case "delete":
                     delete(rq);
+                    break;
+
+                case "edit":
+                    modify(rq);
                     break;
             }
         }
@@ -87,5 +94,40 @@ public class App {
 
         wiseSayings.remove(foundWiseSaying);
         System.out.println("Successfully Delete!");
+    }
+
+    private void modify(Request rq) {
+        int paramId = rq.getIntParam("id", 0);
+
+        if(paramId == 0) {
+            System.out.println("Check your cmd or Write WiseSaying ID!");
+            return;
+        }
+
+        WiseSaying foundWiseSaying = null;
+
+        for (WiseSaying wiseSaying : wiseSayings) {
+            if(wiseSaying.id == paramId) {
+                foundWiseSaying = wiseSaying;
+            }
+        }
+
+        if(foundWiseSaying == null) {
+            System.out.printf("Cannot Found %d WiseSaying!\n", paramId);
+            return;
+        }
+
+        System.out.printf("Edit Your WiseSaying(%d)\n", paramId);
+        System.out.printf("Previous WiseSaying : %s\n", foundWiseSaying.content);
+        System.out.print("Write New WiseSaying : ");
+        String content = sc.nextLine().trim();
+        System.out.printf("Previous author : %s\n", foundWiseSaying.author);
+        System.out.print("Write New author : ");
+        String author = sc.nextLine().trim();
+
+        foundWiseSaying.content = content;
+        foundWiseSaying.author = author;
+
+        System.out.println("Successfully edit Your WiseSaying!");
     }
 }
