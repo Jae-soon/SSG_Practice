@@ -3,11 +3,15 @@ package com.ll.exam;
 import java.util.Scanner;
 
 public class App {
+    public static String mode = "prod";
     private Scanner sc;
 
     public App() {
         sc = new Scanner(System.in);
+    }
 
+    public static String getBaseDir() {
+        return mode + "_data";
     }
 
     public void run() {
@@ -41,6 +45,9 @@ public class App {
                 case "edit":
                     wiseSayingController.modify(rq);
                     break;
+
+                case "build":
+                    wiseSayingController.build(rq);
             }
         }
         sc.close();

@@ -1,6 +1,7 @@
 package com.ll.exam;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class WiseSayingService {
     private WiseSayingRepository wiseSayingRepository;
@@ -27,5 +28,16 @@ public class WiseSayingService {
 
     public void remove(int id) {
         wiseSayingRepository.remove(id);
+    }
+
+    public void dumpToJson() {
+        List<WiseSaying> wiseSayings = wiseSayingRepository.findAll();
+
+        String json = "[" + wiseSayings
+                .stream()
+                .map(wiseSaying -> wiseSaying.toJson())
+                .collect(Collectors.joining(",")) + "]";
+
+        Util.file.saveToFile("%s/data.json".formatted(App.getBaseDir()), json);
     }
 }

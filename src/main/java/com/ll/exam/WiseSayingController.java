@@ -83,4 +83,8 @@ public class WiseSayingController {
 
         System.out.println("Successfully edit Your WiseSaying!");
     }
+
+    public void build(Request rq) {
+        wiseSayingService.dumpToJson();
+    }
 }
